@@ -29,6 +29,12 @@ public class ProductRepository {
         identityMap.put(product.getId(), product);
     }
 
+    public Product createEmptyProduct(){
+        Product product = new Product();
+        product.setId(identity.incrementAndGet());
+        return product;
+    }
+
     public void update(Product product) {
         identityMap.put(product.getId(), product);
     }

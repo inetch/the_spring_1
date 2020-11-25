@@ -76,8 +76,8 @@
                 <version>2.2</version>
                 <configuration>
                     <url>http://localhost:8080/manager/text</url>
-                    <username>admin</username>
-                    <password>admin</password>
+                    <username>geek</username>
+                    <password>geek</password>
                     <path>/mvc-app</path>
                 </configuration>
             </plugin>
