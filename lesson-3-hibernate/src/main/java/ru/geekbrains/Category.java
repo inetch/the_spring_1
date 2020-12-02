@@ -15,7 +15,7 @@ public class Category {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category") //"category" is the name of the field in the Product class
     private List<Product> products;
 
     public Category() {

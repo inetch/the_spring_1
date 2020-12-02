@@ -2,9 +2,11 @@ package ru.geekbrains;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
+@NamedQuery(name = "findByName", query = "from Product c where c.name = :name")
 public class Product {
 
     @Id
@@ -21,7 +23,11 @@ public class Product {
     private BigDecimal price;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderItem> orderItems;
 
     public Product() {
     }
@@ -72,6 +78,14 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     @Override

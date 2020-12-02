@@ -5,9 +5,112 @@ import org.hibernate.cfg.Configuration;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Main {
+
+    private static void initSomeProducts(EntityManagerFactory emFactory){
+        EntityManager em = emFactory.createEntityManager();
+
+        Category laptop = em.createNamedQuery("findByName", Category.class)
+                .setParameter("name", "Laptop")
+                .getSingleResult();
+        Category phone = em.createNamedQuery("findByName", Category.class)
+                .setParameter("name", "Phone")
+                .getSingleResult();
+        Category tablet = em.createNamedQuery("findByName", Category.class)
+                .setParameter("name", "Tablet")
+                .getSingleResult();
+
+        em.getTransaction().begin();
+
+        em.persist(new Product(null, "IBM", "Some description 1", new BigDecimal(2400), laptop));
+        em.persist(new Product(null, "iPad", "Super table", new BigDecimal(1400), tablet));
+        em.persist(new Product(null, "iPhone", "Super mobile phone", new BigDecimal(900), phone));
+        em.getTransaction().commit();
+
+        em.close();
+    }
+
+    public static void initCategories(EntityManagerFactory emFactory){
+        EntityManager em = emFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        em.persist(new Category(null, "Laptop"));
+        em.persist(new Category(null, "Phone"));
+        em.persist(new Category(null, "Tablet"));
+
+        em.getTransaction().commit();
+
+        em.close();
+    }
+
+    public static void initCustomers(EntityManagerFactory emFactory){
+        EntityManager em = emFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        em.persist(new Customer(null, "Homer"));
+        em.persist(new Customer(null, "Bart"));
+        em.persist(new Customer(null, "Maggie"));
+
+        em.getTransaction().commit();
+
+        em.close();
+    }
+
+    public static void initOrders(EntityManagerFactory emFactory){
+        EntityManager em = emFactory.createEntityManager();
+
+        Product ibm = em.createNamedQuery("findByName", Product.class)
+                .setParameter("name", "IBM")
+                .getSingleResult();
+        Product ipad = em.createNamedQuery("findByName", Product.class)
+                .setParameter("name", "iPad")
+                .getSingleResult();
+        Product iphone = em.createNamedQuery("findByName", Product.class)
+                .setParameter("name", "iPhone")
+                .getSingleResult();
+
+        Customer homer = em.createNamedQuery("findByName", Customer.class)
+                .setParameter("name", "Homer")
+                .getSingleResult();
+        Customer bart = em.createNamedQuery("findByName", Customer.class)
+                .setParameter("name", "Bart")
+                .getSingleResult();
+        Customer maggie = em.createNamedQuery("findByName", Customer.class)
+                .setParameter("name", "maggie")
+                .getSingleResult();
+
+        em.getTransaction().begin();
+        Order order = new Order(null, null, homer);
+        em.persist(order);
+        em.persist(new OrderItem(null, null, ibm, order, new BigDecimal(2)));
+        em.persist(new OrderItem(null, null, iphone, order, new BigDecimal(5)));
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        order = new Order(null, null, bart);
+        em.persist(order);
+        em.persist(new OrderItem(null, null, ipad, order, new BigDecimal(1)));
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        order = new Order(null, null, homer);
+        em.persist(order);
+        em.persist(new OrderItem(null, null, iphone, order, new BigDecimal(30)));
+        em.getTransaction().commit();
+
+        em.getTransaction().begin();
+        order = new Order(null, null, maggie);
+        order.addItem(new OrderItem(null, null, ipad, order, new BigDecimal(1)));
+        order.addItem(new OrderItem(null, null, iphone, order, new BigDecimal(11)));
+        em.persist(order);
+//        em.persist(new OrderItem(null, null, iphone, order, new BigDecimal(30)));
+        em.getTransaction().commit();
+
+        em.close();
+    }
 
     public static void main(String[] args) {
         EntityManagerFactory emFactory = new Configuration()
