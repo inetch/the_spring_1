@@ -5,15 +5,15 @@ import java.util.List;
 
 @Entity
 @Table(name="customers")
-@NamedQuery(name = "findByName", query = "from Customer c where c.name = :name")
+@NamedQuery(name = "customerByName", query = "from Customer c where c.name = :name")
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column
-    private String Name;
+    private String name;
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
@@ -22,24 +22,24 @@ public class Customer {
     }
 
     public Customer(Long id, String name) {
-        Id = id;
-        Name = name;
+        this.id = id;
+        this.name = name;
     }
 
     public Long getId() {
-        return Id;
+        return this.id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public List<Order> getOrders() {
@@ -48,5 +48,14 @@ public class Customer {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", orders=" + orders +
+                '}';
     }
 }

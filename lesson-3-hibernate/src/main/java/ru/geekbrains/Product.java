@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@NamedQuery(name = "findByName", query = "from Product c where c.name = :name")
+@NamedQuery(name = "productByName", query = "from Product c where c.name = :name")
 public class Product {
 
     @Id

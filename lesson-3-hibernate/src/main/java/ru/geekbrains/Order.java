@@ -11,7 +11,7 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @CreationTimestamp
     private Timestamp orderTime;
@@ -24,7 +24,7 @@ public class Order {
     private List<OrderItem> items;
 
     public Order(Long id, Timestamp orderTime, Customer customer) {
-        Id = id;
+        this.id = id;
         this.orderTime = orderTime;
         this.customer = customer;
     }
@@ -37,11 +37,11 @@ public class Order {
     }
 
     public Long getId() {
-        return Id;
+        return this.id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Timestamp getOrderTime() {
@@ -66,5 +66,15 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", orderTime=" + orderTime +
+                ", customer=" + customer.getName() + //eternal recursion if we try to use customer instead of the customer.getName()
+                ", items=" + items +
+                '}';
     }
 }

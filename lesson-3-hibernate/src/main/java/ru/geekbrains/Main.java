@@ -5,7 +5,6 @@ import org.hibernate.cfg.Configuration;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class Main {
@@ -13,13 +12,13 @@ public class Main {
     private static void initSomeProducts(EntityManagerFactory emFactory){
         EntityManager em = emFactory.createEntityManager();
 
-        Category laptop = em.createNamedQuery("findByName", Category.class)
+        Category laptop = em.createNamedQuery("categoryByName", Category.class)
                 .setParameter("name", "Laptop")
                 .getSingleResult();
-        Category phone = em.createNamedQuery("findByName", Category.class)
+        Category phone = em.createNamedQuery("categoryByName", Category.class)
                 .setParameter("name", "Phone")
                 .getSingleResult();
-        Category tablet = em.createNamedQuery("findByName", Category.class)
+        Category tablet = em.createNamedQuery("categoryByName", Category.class)
                 .setParameter("name", "Tablet")
                 .getSingleResult();
 
@@ -62,24 +61,24 @@ public class Main {
     public static void initOrders(EntityManagerFactory emFactory){
         EntityManager em = emFactory.createEntityManager();
 
-        Product ibm = em.createNamedQuery("findByName", Product.class)
+        Product ibm = em.createNamedQuery("productByName", Product.class)
                 .setParameter("name", "IBM")
                 .getSingleResult();
-        Product ipad = em.createNamedQuery("findByName", Product.class)
+        Product ipad = em.createNamedQuery("productByName", Product.class)
                 .setParameter("name", "iPad")
                 .getSingleResult();
-        Product iphone = em.createNamedQuery("findByName", Product.class)
+        Product iphone = em.createNamedQuery("productByName", Product.class)
                 .setParameter("name", "iPhone")
                 .getSingleResult();
 
-        Customer homer = em.createNamedQuery("findByName", Customer.class)
+        Customer homer = em.createNamedQuery("customerByName", Customer.class)
                 .setParameter("name", "Homer")
                 .getSingleResult();
-        Customer bart = em.createNamedQuery("findByName", Customer.class)
+        Customer bart = em.createNamedQuery("customerByName", Customer.class)
                 .setParameter("name", "Bart")
                 .getSingleResult();
-        Customer maggie = em.createNamedQuery("findByName", Customer.class)
-                .setParameter("name", "maggie")
+        Customer maggie = em.createNamedQuery("customerByName", Customer.class)
+                .setParameter("name", "Maggie")
                 .getSingleResult();
 
         em.getTransaction().begin();
@@ -103,13 +102,53 @@ public class Main {
 
         em.getTransaction().begin();
         order = new Order(null, null, maggie);
-        order.addItem(new OrderItem(null, null, ipad, order, new BigDecimal(1)));
-        order.addItem(new OrderItem(null, null, iphone, order, new BigDecimal(11)));
         em.persist(order);
+        em.persist(new OrderItem(null, null, ipad, order, new BigDecimal(1)));
+        em.persist(new OrderItem(null, null, iphone, order, new BigDecimal(11)));
 //        em.persist(new OrderItem(null, null, iphone, order, new BigDecimal(30)));
         em.getTransaction().commit();
 
         em.close();
+    }
+
+    private static List<Product> getCustomerProducts(EntityManager em, String customerName){
+        return em.createQuery("select distinct p\n" +
+                "          from Customer c\n" +
+                "            inner join c.orders as o\n" +
+                "            inner join o.items as i\n" +
+                "            inner join i.product as p\n" +
+                "         where c.name = :name", Product.class)
+                .setParameter("name", customerName)
+                .getResultList();
+    }
+
+    private static List<Customer> getProductBuyers(EntityManager em, String productName){
+        return em.createQuery("select distinct c\n" +
+                "          from Customer c\n" +
+                "            inner join c.orders as o\n" +
+                "            inner join o.items as i\n" +
+                "            inner join i.product as p\n" +
+                "         where p.name = :name", Customer.class)
+                .setParameter("name", productName)
+                .getResultList();
+    }
+
+    private static void removeProduct(EntityManager em, String productName){
+        em.getTransaction().begin();
+        Product product = em.createNamedQuery("productByName", Product.class)
+                .setParameter("name", productName)
+                .getSingleResult();
+        em.remove(product);
+        em.getTransaction().commit();
+    }
+
+    private static void removeCustomer(EntityManager em, String customerName){
+        em.getTransaction().begin();
+        Customer customer = em.createNamedQuery("productByName", Customer.class)
+                .setParameter("name", customerName)
+                .getSingleResult();
+        em.remove(customer);
+        em.getTransaction().commit();
     }
 
     public static void main(String[] args) {
@@ -117,101 +156,26 @@ public class Main {
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
 
-        // INSERT
-//        EntityManager em = emFactory.createEntityManager();
-//
-//        em.getTransaction().begin();
-//        Product product = new Product(null, "Some product 1", "Some description 1", new BigDecimal(14));
-//        Product product1 = new Product(null, "iPad", "Super table", new BigDecimal(1400));
-//        Product product2 = new Product(null, "iPhone", "Super mobile phone", new BigDecimal(900));
-//        em.persist(product);
-//        em.persist(product1);
-//        em.persist(product2);
-//        em.getTransaction().commit();
-//
-//        em.close();
+//        initCategories(emFactory);
+//        initCustomers(emFactory);
+//        initSomeProducts(emFactory);
+//        initOrders(emFactory);
 
-        // SELECT
-//        EntityManager em = emFactory.createEntityManager();
-//
-//        Product product = em.find(Product.class, 1L);
-//        System.out.println(product);
-//
-//        // HQL, JPQL
-//        List<Product> products = em.createQuery("from Product", Product.class)
-//                .getResultList();
-//        products.forEach(System.out::println);
-//
-//        List<Product> products1 = em.createQuery("from Product p where p.name = :name ", Product.class)
-//                .setParameter("name", "iPad")
-//                .getResultList();
-//        products1.forEach(System.out::println);
-
-        // SQL
-//        em.createNativeQuery("select * from products", Product.class)
-//                .getResultList();
-//        products.forEach(System.out::println);
-
-//        em.close();
-
-        // UPDATE
-//        EntityManager em = emFactory.createEntityManager();
-//
-//        Product product = em.find(Product.class, 1L);
-//        System.out.println(product);
-//
-//        em.getTransaction().begin();
-//        product.setName("Macbook pro");
-//        em.getTransaction().commit();
-//
-//        em.close();
-
-        // DELETE
-//        EntityManager em = emFactory.createEntityManager();
-//
-//        em.getTransaction().begin();
-//        Product product = em.find(Product.class, 1L);
-//        em.remove(product);
-//        em.getTransaction().commit();
-//
-//        List<Product> products = em.createQuery("from Product", Product.class)
-//                .getResultList();
-//        products.forEach(System.out::println);
-//
-//        em.close();
-
-        // INSERT one-to-many
-//        EntityManager em = emFactory.createEntityManager();
-//
-//        em.getTransaction().begin();
-//
-//        em.persist(new Category(null, "Laptop"));
-//        em.persist(new Category(null, "Phone"));
-//        em.persist(new Category(null, "Tablet"));
-//
-//        Category laptop = em.createNamedQuery("findByName", Category.class)
-//                .setParameter("name", "Laptop")
-//                .getSingleResult();
-//        Category phone = em.createNamedQuery("findByName", Category.class)
-//                .setParameter("name", "Phone")
-//                .getSingleResult();
-//        Category tablet = em.createNamedQuery("findByName", Category.class)
-//                .setParameter("name", "Tablet")
-//                .getSingleResult();
-//
-//        em.persist(new Product(null, "Macbook pro", "Super laptop", new BigDecimal(3000), laptop));
-//        em.persist(new Product(null, "iPad", "Super tablet", new BigDecimal(3000), tablet));
-//        em.persist(new Product(null, "iPhone", "Super phone", new BigDecimal(3000), phone));
-//
-//        em.getTransaction().commit();
-//
-//        em.close();
-
-        // SELECT one-to-many
         EntityManager em = emFactory.createEntityManager();
 
-        List<Product> products = em.createQuery("select p from Product p inner join p.category c", Product.class)
-                .getResultList();
+        //все продукты, что покупал Гомер
+        List<Product> products = getCustomerProducts(em, "Homer");
         products.forEach(System.out::println);
+
+        //все, кто покупал iPhone
+        List<Customer> customers = getProductBuyers(em, "iPhone");
+        customers.forEach(System.out::println);
+
+        // удалим iPhone
+        removeProduct(em, "iPhone");
+        //только удаление не пройдёт, тк на внешних ключах нет опции cascade
+
+        em.close();
+
     }
 }

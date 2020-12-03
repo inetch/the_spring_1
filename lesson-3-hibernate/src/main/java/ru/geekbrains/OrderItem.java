@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @CreationTimestamp
     private Timestamp orderItemTime;
@@ -34,7 +34,7 @@ public class OrderItem {
     }
 
     public OrderItem(Long id, Timestamp orderItemTime, Product product, Order order, BigDecimal count) {
-        Id = id;
+        this.id = id;
         this.orderItemTime = orderItemTime;
         this.product = product;
         this.order = order;
@@ -43,11 +43,11 @@ public class OrderItem {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Timestamp getOrderItemTime() {
