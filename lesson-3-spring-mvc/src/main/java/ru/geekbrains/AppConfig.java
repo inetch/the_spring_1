@@ -16,6 +16,8 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import javax.persistence.EntityManagerFactory;
+
 @EnableWebMvc
 @ComponentScan("ru.geekbrains")
 @Configuration
@@ -41,6 +43,18 @@ public class AppConfig implements WebMvcConfigurer {
         resolver.setCharacterEncoding("UTF-8");
         resolver.setViewNames(new String[] {"*"});
         return resolver;
+    }
+
+    /*
+    * EntityManagerFactory emFactory = new Configuration()
+                .configure("hibernate.cfg.xml")
+                .buildSessionFactory();*/
+
+    @Bean
+    public EntityManagerFactory entityManagerFactory(){
+        return new org.hibernate.cfg.Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .buildSessionFactory();
     }
 
     private ITemplateResolver htmlTemplateResolver() {
