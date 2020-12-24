@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.geekbrains.model.Customer;
-import ru.geekbrains.services.CustomerService;
+import ru.geekbrains.services.CustomerServiceImpl;
 
 @Controller
 @RequestMapping("/customer")
@@ -18,10 +18,10 @@ public class CustomerController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-    private CustomerService service;
+    private final CustomerServiceImpl service;
 
     @Autowired
-    public CustomerController(CustomerService service) {
+    public CustomerController(CustomerServiceImpl service) {
         this.service = service;
     }
 

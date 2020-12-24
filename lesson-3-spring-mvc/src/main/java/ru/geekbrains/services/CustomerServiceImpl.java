@@ -8,11 +8,11 @@ import ru.geekbrains.repositories.CustomerRepository;
 import java.util.List;
 
 @Service
-public class CustomerService {
+public class CustomerServiceImpl {
     private final CustomerRepository repo;
 
     @Autowired
-    public CustomerService(CustomerRepository repo) {
+    public CustomerServiceImpl(CustomerRepository repo) {
         this.repo = repo;
     }
 

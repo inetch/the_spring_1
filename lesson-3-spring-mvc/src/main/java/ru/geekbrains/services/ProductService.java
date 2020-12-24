@@ -1,59 +1,28 @@
 package ru.geekbrains.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 import ru.geekbrains.model.Product;
-import ru.geekbrains.repositories.ProductRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public class ProductService {
-    private final ProductRepository repo;
+public interface ProductService {
+    Product getEmptyProduct();
 
-    private final Product emptyProduct;
+    void remove(long id);
+    void update(Product product);
 
-    @Autowired
-    public ProductService(ProductRepository repo) {
-        this.repo = repo;
-        this.emptyProduct = new Product();
-    }
+    List<Product> findAll();
+    List<Product> findAll(int pageNumber);
 
-    public Product getEmptyProduct(){
-        return emptyProduct;
-    }
-
-    public void remove(long id){
-        Product product = repo.findById(id);
-        repo.delete(product);
-    }
-
-    public void update(Product product){
-        repo.update(product);
-    }
-
-    public List<Product> findAll(){
-        return repo.findAll();
-    }
-    public List<Product> findAll(int pageNumber, int pageSize){
-        return repo.findAll(pageNumber, pageSize);
-    }
-
-    public Product findById(long id){
-        return repo.findById(id);
-    }
-
-    public List<Product> minPriceProducts(){
-        return repo.getMinPriceProducts();
-    }
-
-    public List<Product> maxPriceProducts(){
-        return repo.getMaxPriceProducts();
-    }
-
-    public List<Product> extremePriceProducts(){
-        List<Product> list = repo.getMinPriceProducts();
-        list.addAll(repo.getMaxPriceProducts());
-        return list;
-    }
+    Product findById(long id);
+    Page<Product> findWithFilter(Optional<String> nameFilter,
+                                 Optional<BigDecimal> minPrice,
+                                 Optional<BigDecimal> maxPrice,
+                                 Optional<Integer> page,
+                                 Optional<String> sortField,
+                                 Optional<String> sortOrder);
+    void setPageSize(int pageSize);
+    int getPageSize();
 }
