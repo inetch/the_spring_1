@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -20,6 +21,7 @@ import javax.persistence.EntityManagerFactory;
 
 @EnableWebMvc
 @ComponentScan("ru.geekbrains")
+@Import(PersistConfig.class)
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
 
@@ -28,6 +30,13 @@ public class AppConfig implements WebMvcConfigurer {
     @Autowired
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    @Bean
+    public EntityManagerFactory entityManagerFactory(){
+        return new org.hibernate.cfg.Configuration()
+                .configure("hibernate.cfg.xml")
+                .buildSessionFactory();
     }
 
     @Override
@@ -43,18 +52,6 @@ public class AppConfig implements WebMvcConfigurer {
         resolver.setCharacterEncoding("UTF-8");
         resolver.setViewNames(new String[] {"*"});
         return resolver;
-    }
-
-    /*
-    * EntityManagerFactory emFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .buildSessionFactory();*/
-
-    @Bean
-    public EntityManagerFactory entityManagerFactory(){
-        return new org.hibernate.cfg.Configuration()
-                    .configure("hibernate.cfg.xml")
-                    .buildSessionFactory();
     }
 
     private ITemplateResolver htmlTemplateResolver() {

@@ -1,8 +1,9 @@
-package ru.geekbrains.repositories;
+package ru.geekbrains.spring1.inetch.eshop.repositories;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;

@@ -1,7 +1,8 @@
-package ru.geekbrains.services;
+package ru.geekbrains.spring1.inetch.eshop.services;
 
 import org.springframework.data.domain.Page;
-import ru.geekbrains.model.Product;
+import org.springframework.data.domain.Pageable;
+import ru.geekbrains.spring1.inetch.eshop.model.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ProductService {
     void update(Product product);
 
     List<Product> findAll();
-    List<Product> findAll(int pageNumber);
+    Page<Product> findAll(Pageable pageable);
 
     Product findById(long id);
     Page<Product> findWithFilter(Optional<String> nameFilter,

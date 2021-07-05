@@ -1,18 +1,18 @@
-package ru.geekbrains.services;
+package ru.geekbrains.spring1.inetch.eshop.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.geekbrains.model.Customer;
-import ru.geekbrains.repositories.CustomerRepository;
+import ru.geekbrains.spring1.inetch.eshop.model.Customer;
+import ru.geekbrains.spring1.inetch.eshop.repositories.CustomerRepository;
 
 import java.util.List;
 
 @Service
-public class CustomerService {
+public class CustomerServiceImpl {
     private final CustomerRepository repo;
 
     @Autowired
-    public CustomerService(CustomerRepository repo) {
+    public CustomerServiceImpl(CustomerRepository repo) {
         this.repo = repo;
     }
 

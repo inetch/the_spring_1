@@ -1,4 +1,4 @@
-package ru.geekbrains.controllers;
+package ru.geekbrains.spring1.inetch.eshop.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.geekbrains.model.Product;
-import ru.geekbrains.services.ProductService;
+import ru.geekbrains.spring1.inetch.eshop.model.Product;
+import ru.geekbrains.spring1.inetch.eshop.services.ProductService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,11 +38,13 @@ public class ProductController {
         size.ifPresent(service::setPageSize);
         List<Product> products;
 
-        if(!page.isEmpty()){
-            products = service.findAll(page.get());
-        }else{
-            products = service.findAll();
-        }
+        products = service.findAll();
+
+//        if(!page.isEmpty()){
+//            products = service.findAll(page.get());
+//        }else{
+//            products = service.findAll();
+//        }
 
         //List<Product> products = service.findWithFilter(nameFilter, minPrice, maxPrice, page, sortField, sortOrder).toList();
         model.addAttribute("products", products);
